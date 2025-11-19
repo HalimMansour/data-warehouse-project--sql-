@@ -22,10 +22,10 @@ AS
 BEGIN
     -- Optional: suppress "rows affected" messages
     -- SET NOCOUNT ON;
-
+	DECLARE @BatchStartTime DATETIME2, @BatchEndTime DATETIME2, @StartTime DATETIME2, @EndTime DATETIME2, @DurationMS BIGINT,@BatchDurationMS BIGINT;
     BEGIN TRY
         BEGIN TRANSACTION;
-
+		SET @BatchStartTime = SYSDATETIME(); 
         -- ==================================================
         --                   START HEADER
         -- ==================================================
@@ -42,7 +42,7 @@ BEGIN
         PRINT '                  Loading CRM Tables            ';
         PRINT '-------------------------------------------------';
 
-        DECLARE @StartTime DATETIME2, @EndTime DATETIME2, @DurationMS BIGINT;
+       
 
         -- Customer Info
         PRINT '';
@@ -180,6 +180,11 @@ BEGIN
         PRINT '         Bronze Layer Data Load Completed       ';
         PRINT '         Completion Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         PRINT '=================================================';
+		PRINT '';
+
+		SET @BatchEndTime = SYSDATETIME();
+		SET @BatchDurationMS = DATEDIFF(MILLISECOND, @BatchStartTime, @BatchEndTime);
+		PRINT '   Batch Duration: ' + CAST(@BatchDurationMS AS VARCHAR(20)) + ' ms';
 
         COMMIT TRANSACTION;
     END TRY
