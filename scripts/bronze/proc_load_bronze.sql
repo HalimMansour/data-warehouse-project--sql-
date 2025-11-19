@@ -33,6 +33,7 @@ BEGIN
         -- ==================================================
         PRINT '=================================================';
         PRINT '             Starting Bronze Layer Load          ';
+        PRINT '             Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         PRINT '=================================================';
         PRINT '';
 
@@ -49,6 +50,7 @@ BEGIN
         TRUNCATE TABLE bronze.crm_cust_info;
 
         PRINT ' * Loading CRM.Customer Info ';
+        PRINT '   Start Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         BULK INSERT bronze.crm_cust_info
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_crm\cust_info.csv'
         WITH (
@@ -58,6 +60,7 @@ BEGIN
             TABLOCK
         );
         PRINT ' * Finished loading CRM.Customer Info ';
+        PRINT '   End Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         PRINT '-------------------------------------------------';
 
         -- Product Info
@@ -66,6 +69,7 @@ BEGIN
         TRUNCATE TABLE bronze.crm_prd_info;
 
         PRINT ' * Loading CRM.Product Info ';
+        PRINT '   Start Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         BULK INSERT bronze.crm_prd_info
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_crm\prd_info.csv'
         WITH (
@@ -75,6 +79,7 @@ BEGIN
             TABLOCK
         );
         PRINT ' * Finished loading CRM.Product Info ';
+        PRINT '   End Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         PRINT '-------------------------------------------------';
 
         -- Sales Details
@@ -83,6 +88,7 @@ BEGIN
         TRUNCATE TABLE bronze.crm_sales_details;
 
         PRINT ' * Loading CRM.Sales Details ';
+        PRINT '   Start Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         BULK INSERT bronze.crm_sales_details
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_crm\sales_details.csv'
         WITH (
@@ -92,6 +98,7 @@ BEGIN
             TABLOCK
         );
         PRINT ' * Finished loading CRM.Sales Details ';
+        PRINT '   End Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         PRINT '-------------------------------------------------';
 
         -- ==================================================
@@ -108,6 +115,7 @@ BEGIN
         TRUNCATE TABLE bronze.erp_cust_az12;
 
         PRINT ' * Loading ERP.Customer Data (CUST_AZ12) ';
+        PRINT '   Start Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         BULK INSERT bronze.erp_cust_az12
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_erp\CUST_AZ12.csv'
         WITH (
@@ -117,6 +125,7 @@ BEGIN
             TABLOCK
         );
         PRINT ' * Finished loading ERP.Customer Data (CUST_AZ12) ';
+        PRINT '   End Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         PRINT '-------------------------------------------------';
 
         -- Location Data (LOC_A101)
@@ -125,6 +134,7 @@ BEGIN
         TRUNCATE TABLE bronze.erp_loc_a101;
 
         PRINT ' * Loading ERP.Location Data (LOC_A101) ';
+        PRINT '   Start Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         BULK INSERT bronze.erp_loc_a101
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_erp\LOC_A101.csv'
         WITH (
@@ -134,6 +144,7 @@ BEGIN
             TABLOCK
         );
         PRINT ' * Finished loading ERP.Location Data (LOC_A101) ';
+        PRINT '   End Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         PRINT '-------------------------------------------------';
 
         -- Product Category (PX_CAT_G1V2)
@@ -142,6 +153,7 @@ BEGIN
         TRUNCATE TABLE bronze.erp_px_cat_g1v2;
 
         PRINT ' * Loading ERP.Product Category (PX_CAT_G1V2) ';
+        PRINT '   Start Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         BULK INSERT bronze.erp_px_cat_g1v2
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_erp\PX_CAT_G1V2.csv'
         WITH (
@@ -151,8 +163,10 @@ BEGIN
             TABLOCK
         );
         PRINT ' * Finished loading ERP.Product Category (PX_CAT_G1V2) ';
+        PRINT '   End Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         PRINT '=================================================';
-        PRINT '         Bronze Layer Data Load Completed    ';
+        PRINT '         Bronze Layer Data Load Completed       ';
+        PRINT '         Completion Time: ' + CONVERT(VARCHAR, GETDATE(), 120);
         PRINT '=================================================';
 
         COMMIT TRANSACTION;
@@ -163,7 +177,10 @@ BEGIN
             ROLLBACK TRANSACTION;
 
         PRINT '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
-        PRINT '       !ERROR: Bronze Layer Load Failed!';
+        PRINT '       ERROR: Bronze Layer Load Failed!       ';
+        PRINT '       Error Message: ' + ERROR_MESSAGE();
+        PRINT '       Error Number: ' + CAST(ERROR_NUMBER() AS NVARCHAR);
+        PRINT '       Error State: ' + CAST(ERROR_STATE() AS NVARCHAR);
         PRINT '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
 
         THROW;
