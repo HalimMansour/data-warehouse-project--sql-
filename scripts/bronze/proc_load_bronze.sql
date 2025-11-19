@@ -1,3 +1,25 @@
+/*
+===============================================================================
+Stored Procedure: bronze.load_bronze
+Purpose:
+    Loads raw source data from external CSV files into the Bronze Layer tables.
+
+Description:
+    This procedure performs a full refresh of all Bronze tables by:
+      - Truncating each target table before loading.
+      - Performing BULK INSERT operations from local CSV source files.
+      - Ensuring consistent, clean, and repeatable ingestion into the Bronze layer.
+
+Notes:
+    - The procedure does not take any parameters.
+    - It does not return any result sets.
+    - Intended for use in ETL/ELT pipelines as a raw data ingestion step.
+
+Usage Example:
+    EXEC bronze.load_bronze;
+===============================================================================
+*/
+
 CREATE OR ALTER PROCEDURE bronze.load_bronze
 AS
 BEGIN
