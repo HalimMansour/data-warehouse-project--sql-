@@ -28,11 +28,27 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        /* -------------------------------------
-           CRM: Customer Info
-        ------------------------------------- */
+        -- ==================================================
+        --                   START HEADER
+        -- ==================================================
+        PRINT '=================================================';
+        PRINT '             Starting Bronze Layer Load          ';
+        PRINT '=================================================';
+        PRINT '';
+
+        -- ==================================================
+        --                   CRM TABLES
+        -- ==================================================
+        PRINT '-------------------------------------------------';
+        PRINT '                  Loading CRM Tables            ';
+        PRINT '-------------------------------------------------';
+
+        -- Customer Info
+        PRINT '';
+        PRINT ' * Truncating Table: CRM.Customer Info ';
         TRUNCATE TABLE bronze.crm_cust_info;
 
+        PRINT ' * Loading CRM.Customer Info ';
         BULK INSERT bronze.crm_cust_info
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_crm\cust_info.csv'
         WITH (
@@ -41,13 +57,15 @@ BEGIN
             ROWTERMINATOR = '\n',
             TABLOCK
         );
+        PRINT ' * Finished loading CRM.Customer Info ';
+        PRINT '-------------------------------------------------';
 
-
-        /* -------------------------------------
-           CRM: Product Info
-        ------------------------------------- */
+        -- Product Info
+        PRINT '';
+        PRINT ' * Truncating Table: CRM.Product Info ';
         TRUNCATE TABLE bronze.crm_prd_info;
 
+        PRINT ' * Loading CRM.Product Info ';
         BULK INSERT bronze.crm_prd_info
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_crm\prd_info.csv'
         WITH (
@@ -56,13 +74,15 @@ BEGIN
             ROWTERMINATOR = '\n',
             TABLOCK
         );
+        PRINT ' * Finished loading CRM.Product Info ';
+        PRINT '-------------------------------------------------';
 
-
-        /* -------------------------------------
-           CRM: Sales Details
-        ------------------------------------- */
+        -- Sales Details
+        PRINT '';
+        PRINT ' * Truncating Table: CRM.Sales Details ';
         TRUNCATE TABLE bronze.crm_sales_details;
 
+        PRINT ' * Loading CRM.Sales Details ';
         BULK INSERT bronze.crm_sales_details
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_crm\sales_details.csv'
         WITH (
@@ -71,13 +91,23 @@ BEGIN
             ROWTERMINATOR = '\n',
             TABLOCK
         );
+        PRINT ' * Finished loading CRM.Sales Details ';
+        PRINT '-------------------------------------------------';
 
+        -- ==================================================
+        --                   ERP TABLES
+        -- ==================================================
+        PRINT '';
+        PRINT '-------------------------------------------------';
+        PRINT '                  Loading ERP Tables            ';
+        PRINT '-------------------------------------------------';
 
-        /* -------------------------------------
-           ERP: Customer Data (CUST_AZ12)
-        ------------------------------------- */
+        -- Customer Data (CUST_AZ12)
+        PRINT '';
+        PRINT ' * Truncating Table: ERP.Customer Data (CUST_AZ12) ';
         TRUNCATE TABLE bronze.erp_cust_az12;
 
+        PRINT ' * Loading ERP.Customer Data (CUST_AZ12) ';
         BULK INSERT bronze.erp_cust_az12
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_erp\CUST_AZ12.csv'
         WITH (
@@ -86,13 +116,15 @@ BEGIN
             ROWTERMINATOR = '\n',
             TABLOCK
         );
+        PRINT ' * Finished loading ERP.Customer Data (CUST_AZ12) ';
+        PRINT '-------------------------------------------------';
 
-
-        /* -------------------------------------
-           ERP: Location Data (LOC_A101)
-        ------------------------------------- */
+        -- Location Data (LOC_A101)
+        PRINT '';
+        PRINT ' * Truncating Table: ERP.Location Data (LOC_A101) ';
         TRUNCATE TABLE bronze.erp_loc_a101;
 
+        PRINT ' * Loading ERP.Location Data (LOC_A101) ';
         BULK INSERT bronze.erp_loc_a101
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_erp\LOC_A101.csv'
         WITH (
@@ -101,13 +133,15 @@ BEGIN
             ROWTERMINATOR = '\n',
             TABLOCK
         );
+        PRINT ' * Finished loading ERP.Location Data (LOC_A101) ';
+        PRINT '-------------------------------------------------';
 
-
-        /* -------------------------------------
-           ERP: Product Category (PX_CAT_G1V2)
-        ------------------------------------- */
+        -- Product Category (PX_CAT_G1V2)
+        PRINT '';
+        PRINT ' * Truncating Table: ERP.Product Category (PX_CAT_G1V2) ';
         TRUNCATE TABLE bronze.erp_px_cat_g1v2;
 
+        PRINT ' * Loading ERP.Product Category (PX_CAT_G1V2) ';
         BULK INSERT bronze.erp_px_cat_g1v2
         FROM 'C:\Work\Study\SQL\data_warehouse_datasets\source_erp\PX_CAT_G1V2.csv'
         WITH (
@@ -116,6 +150,10 @@ BEGIN
             ROWTERMINATOR = '\n',
             TABLOCK
         );
+        PRINT ' * Finished loading ERP.Product Category (PX_CAT_G1V2) ';
+        PRINT '=================================================';
+        PRINT '         Bronze Layer Data Load Completed    ';
+        PRINT '=================================================';
 
         COMMIT TRANSACTION;
     END TRY
@@ -124,8 +162,11 @@ BEGIN
         IF @@TRANCOUNT > 0
             ROLLBACK TRANSACTION;
 
-        THROW;  -- returns full error to caller
+        PRINT '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
+        PRINT '       !ERROR: Bronze Layer Load Failed!';
+        PRINT '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
+
+        THROW;
     END CATCH
 END;
 GO
-
